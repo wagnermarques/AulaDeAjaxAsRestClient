@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cliente Rest</title>
+</head>
+<body>
+  <h1>Cliente Rest WebStatico </h1>
+
+  <button id="getUsersButton">Get Users</button>
+  <div id="userList"></div>
+
+  <button id="getUserButton">Get User with ID 1</button>
+  <div id="userDetails"></div>
+
+  <script>
+    // fecth habilitando cors
+    function fetchWithCors(url, options) {
+      return fetch(url, {
+        mode: 'cors',
+        ...options,
+      });
+    }
+
+    document.getElementById('getUsersButton').addEventListener('click', async () => {
+      try {
+        const response = await fetchWithCors('http://localhost:3000/users');
+        const data = await response.json();
+        const userList = document.getElementById('userList');
+        userList.innerHTML = JSON.stringify(data, null, 2);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+
+    document.getElementById('getUserButton').addEventListener('click', async () => {
+      try {
+        const response = await fetchWithCors('http://localhost:3000/users/1');
+        if (response.status === 404) {
+          console.error('User not found');
+          return;
+        }
+        const data = await response.json();
+        const userDetails = document.getElementById('userDetails');
+        userDetails.innerHTML = JSON.stringify(data, null, 2);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    });
+  </script>
+</body>
+</html>
